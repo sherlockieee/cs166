@@ -4,24 +4,25 @@ matplotlib.use("TkAgg")
 from pylab import *
 
 n = 100  # size of space: n x n
-p = 0.1  # probability of initially panicky individuals
 density = []
+p = 0.1
 
 
-def set_probability(val=p):
+def initial_probability(val=p):
     global p
     p = float(val)
     return val
 
 
 def initialize():
-    global config, nextconfig, density
+    global config, nextconfig, density, p
     config = zeros([n, n])
     for x in range(n):
         for y in range(n):
             config[x, y] = 1 if random() < p else 0
     nextconfig = zeros([n, n])
     density = []
+    density.append(sum(config) / (n * n))
 
 
 def observe():
@@ -51,12 +52,12 @@ def update():
                 nextconfig[x, y] = 1
             else:
                 nextconfig[x, y] = 0
-    density.append(np.sum(nextconfig) / (n * n))
     config, nextconfig = nextconfig, config
+    density.append(sum(config) / (n * n))
 
 
 import pycxsimulator
 
-pycxsimulator.GUI(parameterSetters=[set_probability]).start(
+pycxsimulator.GUI(parameterSetters=[initial_probability]).start(
     func=[initialize, observe, update]
 )

@@ -22,6 +22,7 @@ def initialize():
             config[x, y] = 1 if random() < p else 0
     nextconfig = zeros([n, n])
     density = []
+    density.append(sum(config) / (n * n))
 
 
 def observe():
@@ -42,11 +43,9 @@ def update():
             count = 0
             for dx in [-1, 0, 1]:
                 for dy in [-1, 0, 1]:
-                    if dx == dy == 0:
-                        continue
                     count += config[(x + dx) % n, (y + dy) % n]
             nextconfig[x, y] = 1 if count >= 4 else 0
-    density.append(np.sum(nextconfig) / (n * n))
+    density.append(sum(nextconfig) / (n * n))
     config, nextconfig = nextconfig, config
 
 
